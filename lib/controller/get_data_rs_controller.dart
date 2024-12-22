@@ -1,4 +1,6 @@
 import 'package:app_cari_rumahsakit/config/api.dart';
+import 'package:app_cari_rumahsakit/model/RumahSakit_Model.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -44,6 +46,46 @@ import 'dart:convert';
 // }
 
 class GetDataRsController {
+  // Future<bool> mappingDataRS(BuildContext context) async {
+  //   bool valid = false;
+
+  //   var headers = {
+  //     'Content-Type':
+  //         'application/json', // Specify content type for JSON data // Example for authentication
+  //   };
+  //   var dataRS = Uri.parse(API.rumahSakit);
+
+  //   await http.get(dataRS, headers: headers).then((response) async {
+  //     var decode = await json.decode(response.body);
+
+  //     //debug_print
+  //     print(response.body);
+
+  //     if (decode['meta']['code'] == 200) {
+  //       List<RumahSakit> decodeDataRS = [];
+  //       print("ok");
+
+  //       for (var i = 0; i < decode['data'].length; i++) {
+  //         decodeDataRS.add(RumahSakit(
+  //             name: decode['data'][i]['name'],
+  //             address: decode['data'][i]['address'],
+  //             region: decode['data'][i]['region'],
+  //             phone: decode['data'][i]['phone'],
+  //             province: decode['data'][i]['province']));
+  //       }
+
+  //       //debug_print
+  //       print(decodeDataRS.length.toString());
+
+  //       valid = true;
+  //     }
+  //   }).catchError((error) {
+  //     //debug_print
+  //     print(error);
+  //     valid = false;
+  //   });
+  //   return valid;
+  // }
   Future<List<dynamic>>getData() async {
     var linkApi = Uri.parse(API.rumahSakit);
     List<dynamic> dataRumahSakit = [];
@@ -51,9 +93,17 @@ class GetDataRsController {
     await http.get(linkApi).then((response) async {
       var decode = await json.decode(response.body);
       
-      for(var i = 0; i < decode.length; i++){
-        dataRumahSakit.add(decode[i]);
-      }
+      for (var i = 0; i < decode['data'].length; i++) {
+          dataRumahSakit.add(RumahSakit(
+              name: decode['data'][i]['name'],
+              address: decode['data'][i]['address'],
+              region: decode['data'][i]['region'],
+              phone: decode['data'][i]['phone'],
+              province: decode['data'][i]['province']));
+        }
+      // for(var i = 0; i < decode.length; i++){
+      //   dataRumahSakit.add(decode[i]);
+      // }
     },);
     return dataRumahSakit;
   }

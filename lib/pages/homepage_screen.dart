@@ -9,12 +9,60 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // int _counter = 0;
+  int _counter = 0;
+  // GetDataRsController getDataRsController = GetDataRsController();
+  List<dynamic> dataRumahSakit = [];
+  String hasilCekPencarian = '';
+  TextEditingController inputController = TextEditingController();
 
-  void _incrementCounter() {
+  // Ambil data dari API
+  void ambilData () async {
+    List dataRS = await GetDataRsController().getData();
+    // List dataRS = ['Fadli Rahmat Ihsan', 'Muhammad Sumbul', 'Khalid Kashmiri'];
     setState(() {
-      // _counter++;
+      dataRumahSakit = dataRS;
     });
+  }
+
+  void cetakDataRS () {
+    print(dataRumahSakit[0]);
+  }
+
+  // Proses Cek Validasi
+  bool cekNamaRumahSakit(String nama) {
+  return dataRumahSakit.any((rs) => rs.name.toLowerCase() == nama.toLowerCase());
+}
+
+  void cekPencarian () {
+    String userInput = inputController.text;
+    bool isValid = cekNamaRumahSakit(userInput);
+    // bool isValid = dataRumahSakit.contains('Fadli Rahmat Ihsan');
+
+    // Debug userInput dan isValid
+    print('_____________________________');
+    print(dataRumahSakit);
+    print(userInput);
+    print(isValid);
+    print(dataRumahSakit[0]);
+
+    setState(() {
+      hasilCekPencarian = isValid
+      ? 'Data ditemukan'
+      : 'Data tidak ditemukan';
+    });
+  }
+
+  void _refreshPage() {
+    setState(() {
+      _counter = 0;
+    }
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ambilData();
   }
 
   @override
@@ -53,17 +101,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         Row(
                           children: [
-                            const Expanded(
-                              child: TextField() 
+                            Expanded(
+                              child: TextField(
+                                controller: inputController,
+                                decoration: InputDecoration(
+                                  labelText: 'Masukkan nama rumah sakit'
+                                ),
+                              )
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(20,0,0,0) ,
                               child: ElevatedButton(
-                                onPressed: () async {
-                                  var hasil = await GetDataRsController().getData();
-                                  print(hasil[4]);
+                                onPressed: () {
+                                  cekPencarian();
                                 },
-                              style: ElevatedButton.styleFrom(
+                                  // var hasil = await GetDataRsController().getData();
+                                  // print(hasil);
+                                style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.purple,
                               ),
                               child: const Text(
@@ -77,9 +131,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.fromLTRB(0,10,0,0),
-                          child:  Text('Data ditemukan atau tidak', style: TextStyle(fontSize: 16)),
+                          child:  Text(hasilCekPencarian)
+                          // (hasilCekPencarian, style: TextStyle(fontSize: 16)),
                         ),
                       ],
                     ),
@@ -90,10 +145,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        onPressed: _refreshPage,
+        tooltip: 'Refresh',
+        child: const Icon(Icons.refresh),
+      ),
     );
   }
 }
