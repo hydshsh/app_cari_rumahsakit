@@ -24,11 +24,11 @@ class RumahSakit {
     });
 
     factory RumahSakit.fromJson(Map<String, dynamic> json) => RumahSakit(
-        name: json["name"],
-        address: json["address"],
-        region: json["region"],
-        phone: json["phone"],
-        province: json["province"],
+      name: json['name'] ?? 'Unknown', // Jika null, berikan default 'Unknown'
+      address: json['address'] ?? 'Unknown', // Jika null, berikan default 'Unknown'
+      region: json['region'] ?? 'Unknown', // Jika null, berikan default 'Unknown'
+      phone: json['phone'] ?? 'Unknown', // Jika null, berikan default 'Unknown'
+      province: json['province'] ?? 'Unknown', // Jika null, berikan default 'Unknown'
     );
 
     Map<String, dynamic> toJson() => {

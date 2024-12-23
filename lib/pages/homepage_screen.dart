@@ -1,4 +1,5 @@
-import 'package:app_cari_rumahsakit/controller/get_data_rs_controller.dart';
+import 'package:app_cari_rumahsakit/controller/homepage_controller.dart';
+import 'package:app_cari_rumahsakit/model/RumahSakit_Model.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -10,40 +11,34 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  // GetDataRsController getDataRsController = GetDataRsController();
-  List<dynamic> dataRumahSakit = [];
+  List dataRumahSakit = [];
   String hasilCekPencarian = '';
   TextEditingController inputController = TextEditingController();
 
   // Ambil data dari API
   void ambilData () async {
     List dataRS = await GetDataRsController().getData();
-    // List dataRS = ['Fadli Rahmat Ihsan', 'Muhammad Sumbul', 'Khalid Kashmiri'];
     setState(() {
       dataRumahSakit = dataRS;
     });
   }
 
-  void cetakDataRS () {
-    print(dataRumahSakit[0]);
-  }
-
   // Proses Cek Validasi
   bool cekNamaRumahSakit(String nama) {
-  return dataRumahSakit.any((rs) => rs.name.toLowerCase() == nama.toLowerCase());
-}
+    return dataRumahSakit.any((rs) => rs.name.toLowerCase() == nama.toLowerCase());
+  }
 
   void cekPencarian () {
     String userInput = inputController.text;
     bool isValid = cekNamaRumahSakit(userInput);
-    // bool isValid = dataRumahSakit.contains('Fadli Rahmat Ihsan');
+    // bool isValid = dataRumahSakit.contains(userInput);
 
     // Debug userInput dan isValid
     print('_____________________________');
-    print(dataRumahSakit);
+    // print(dataRumahSakit);
     print(userInput);
     print(isValid);
-    print(dataRumahSakit[0]);
+    // print(dataRumahSakit[0]);
 
     setState(() {
       hasilCekPencarian = isValid
@@ -133,9 +128,25 @@ class _MyHomePageState extends State<MyHomePage> {
                         const SizedBox(height: 10),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0,10,0,0),
-                          child:  Text(hasilCekPencarian)
-                          // (hasilCekPencarian, style: TextStyle(fontSize: 16)),
+                          child:  Text(hasilCekPencarian, style: TextStyle(fontSize: 16)),
                         ),
+                        // Expanded(
+                        //   child: filteredRumahSakit.isEmpty
+                        //       ? Center(child: CircularProgressIndicator())
+                        //       : ListView.builder(
+                        //           itemCount: filteredRumahSakit.length,
+                        //           itemBuilder: (context, index) {
+                        //             return ListTile(
+                        //               title: Text(filteredRumahSakit[index].name),
+                        //               subtitle: Text(filteredRumahSakit[index].address),
+                        //               onTap: () {
+                        //                 Menampilkan dialog saat item dipilih
+                        //                 showDetailDialog(filteredRumahSakit[index]);
+                        //               },
+                        //             );
+                        //           },
+                        //         ),
+                        // ),
                       ],
                     ),
                   ),
